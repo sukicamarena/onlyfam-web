@@ -124,6 +124,19 @@ export default async function InvitePage({ params }: Props) {
                 — {invite.sender_name}
               </p>
             </div>
+
+            <a
+              href={APP_STORE_URL}
+              className="mt-7 block w-full text-center text-white font-semibold text-base px-6 py-4 rounded-xl shadow-md active:scale-95 transition-all"
+              style={{
+                fontFamily: 'Georgia, serif',
+                fontStyle: 'italic',
+                background: '#1d4ed8',
+                boxShadow: '0 4px 14px rgba(29,78,216,0.25)',
+              }}
+            >
+              Unirme al grupo de {invite.group_name} →
+            </a>
           </div>
         </div>
       </section>
