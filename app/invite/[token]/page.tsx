@@ -64,7 +64,7 @@ export default async function InvitePage({ params }: Props) {
 
   return (
     <div style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      {/* Animaciones scroll */}
+      {/* Animaciones */}
       <style>{`
         .reveal {
           opacity: 0;
@@ -75,7 +75,58 @@ export default async function InvitePage({ params }: Props) {
         .d1 { transition-delay: 0.08s; }
         .d2 { transition-delay: 0.18s; }
         .d3 { transition-delay: 0.28s; }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .letter-enter {
+          animation: fadeInUp 0.8s ease both;
+        }
       `}</style>
+
+      {/* ─────────────────────────────────────
+          0. CARTA PERSONAL
+      ───────────────────────────────────── */}
+      <section className="bg-[#fffdf7] px-6 py-12">
+        <div
+          className="letter-enter max-w-lg mx-auto rounded-2xl shadow-md overflow-hidden"
+          style={{ borderLeft: '3px solid #1d4ed8' }}
+        >
+          <div className="px-7 py-8">
+            {/* Sobre */}
+            <p className="text-2xl mb-4">💌</p>
+
+            {/* Remitente */}
+            <p
+              className="text-sm font-semibold text-[#1d4ed8] mb-5 tracking-wide"
+              style={{ fontFamily: 'Georgia, serif' }}
+            >
+              {invite.sender_name} te escribió algo:
+            </p>
+
+            {/* Carta */}
+            <div
+              className="text-[#2d2d2d] text-[1.05rem] leading-[1.85] space-y-4"
+              style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic' }}
+            >
+              <p>Hola 🤍</p>
+              <p>
+                Te mando este link porque te considero parte de mi familia —
+                o algo muy cercano a eso. Y si lo estás leyendo, es porque lo eres.
+              </p>
+              <p>
+                OnlyFam es el lugar donde guardo los momentos que más me importan.
+                Fotos, recuerdos, conversaciones que no quiero que se pierdan
+                en el ruido de las redes sociales.
+              </p>
+              <p>Quiero que tú también seas parte de esto.</p>
+              <p className="pt-2 text-[#1d4ed8] font-semibold">
+                — {invite.sender_name}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ─────────────────────────────────────
           1. HERO
