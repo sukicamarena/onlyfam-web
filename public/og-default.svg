@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Fondo azul degradado -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Círculo decorativo fondo -->
+  <circle cx="1050" cy="120" r="260" fill="white" fill-opacity="0.05"/>
+  <circle cx="150"  cy="520" r="200" fill="white" fill-opacity="0.05"/>
+
+  <!-- Logo texto -->
+  <text
+    x="600" y="270"
+    font-family="Georgia, serif"
+    font-size="96"
+    font-weight="bold"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >OnlyFam</text>
+
+  <!-- Corazón -->
+  <text
+    x="600" y="380"
+    font-family="system-ui, sans-serif"
+    font-size="64"
+    fill="white"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    opacity="0.9"
+  >🤍</text>
+
+  <!-- Subtítulo -->
+  <text
+    x="600" y="470"
+    font-family="Georgia, serif"
+    font-style="italic"
+    font-size="32"
+    fill="white"
+    fill-opacity="0.7"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >Tu espacio privado para los momentos que más importan</text>
+</svg>

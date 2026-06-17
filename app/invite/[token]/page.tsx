@@ -75,6 +75,16 @@ export default async function InvitePage({ params }: Props) {
         .d1 { transition-delay: 0.08s; }
         .d2 { transition-delay: 0.18s; }
         .d3 { transition-delay: 0.28s; }
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        .marquee-track {
+          display: flex;
+          gap: 16px;
+          width: max-content;
+          animation: marquee 20s linear infinite;
+        }
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
@@ -294,6 +304,79 @@ export default async function InvitePage({ params }: Props) {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────
+          3b. CARRUSEL + FEATURES
+      ───────────────────────────────────── */}
+      <section className="bg-[#f0f4ff] pb-20 overflow-hidden">
+        {/* Carrusel */}
+        <div className="overflow-hidden w-full mb-14">
+          <div className="marquee-track">
+            {/* Renderizamos el set doble para loop seamless */}
+            {[...Array(2)].map((_, set) =>
+              ['s1','s2','s3','s4','s5'].map((s) => (
+                <div
+                  key={`${set}-${s}`}
+                  style={{
+                    width: 160,
+                    height: 320,
+                    flexShrink: 0,
+                    borderRadius: 36,
+                    border: '3px solid #e2e8f0',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
+                    overflow: 'hidden',
+                    background: '#dde6f7',
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`https://onlyfam-web.vercel.app/screenshots/${s}.png`}
+                    alt={`Screenshot ${s}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Features */}
+        <div className="max-w-lg mx-auto px-6">
+          <h2 className="reveal text-[#0a0a0a] text-2xl font-bold text-center mb-8">
+            Todo lo que puedes hacer en OnlyFam
+          </h2>
+
+          <div className="grid grid-cols-2 gap-3 mb-10">
+            {(
+              [
+                { icon: '📸', label: 'Compartir fotos y videos' },
+                { icon: '💬', label: 'Chat grupal privado' },
+                { icon: '🎵', label: 'Canción del momento' },
+                { icon: '🏆', label: 'Retos familiares' },
+                { icon: '📊', label: 'Ranking de pasos' },
+                { icon: '🎯', label: 'OnlyFam Moment' },
+                { icon: '🔒', label: '100% privado, sin anuncios' },
+                { icon: '❤️', label: 'Solo personas invitadas' },
+              ] as const
+            ).map((pill) => (
+              <div
+                key={pill.label}
+                className="flex items-center gap-2 bg-white border border-[#e2e8f0] px-4 py-2 rounded-full"
+              >
+                <span className="text-base">{pill.icon}</span>
+                <span className="text-[#374151] text-xs font-medium leading-tight">{pill.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <a
+            href={APP_STORE_URL}
+            className="reveal block w-full text-center bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-semibold text-base px-8 py-4 rounded-2xl shadow-md transition-all"
+          >
+            Quiero esto para mi familia →
+          </a>
         </div>
       </section>
 
