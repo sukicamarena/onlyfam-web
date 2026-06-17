@@ -324,10 +324,10 @@ export default async function InvitePage({ params }: Props) {
                     height: 320,
                     flexShrink: 0,
                     borderRadius: 36,
-                    border: '3px solid #e2e8f0',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
+                    border: 'none',
+                    boxShadow: 'none',
                     overflow: 'hidden',
-                    background: '#dde6f7',
+                    background: '#f0f4ff',
                   }}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
