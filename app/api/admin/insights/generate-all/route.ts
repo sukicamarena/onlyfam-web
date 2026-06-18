@@ -10,8 +10,7 @@ export async function GET() {
   const errors: { userId: string; error: string }[] = [];
   let processed = 0;
 
-  const base = process.env.NEXT_PUBLIC_SITE_URL
-    ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const base = 'https://onlyfam-web.vercel.app';
 
   for (let i = 0; i < users.length; i += BATCH) {
     const batch = users.slice(i, i + BATCH);
