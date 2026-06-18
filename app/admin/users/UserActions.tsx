@@ -286,6 +286,10 @@ export default function UsersTable({ users }: { users: User[] }) {
                     onClick={() => setSelected(u)}
                     className="text-xs text-[#1A6FD4] hover:underline font-medium"
                   >Ver perfil</button>
+                  <a
+                    href={`/admin/insights?user=${u.id}`}
+                    className="text-xs text-purple-500 hover:underline font-medium ml-3"
+                  >Ver perfil IA 🧠</a>
                   <RowBanButton userId={u.id} />
                 </td>
               </tr>

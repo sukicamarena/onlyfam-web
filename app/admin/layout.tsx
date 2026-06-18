@@ -12,6 +12,7 @@ const NAV = [
   { href: '/admin/costs',    icon: '💰', label: 'CAC & Costos' },
   { href: '/admin/moderation', icon: '🛡️', label: 'Moderación' },
   { href: '/admin/support',  icon: '⚙️', label: 'Soporte'     },
+  { href: '/admin/insights', icon: '🧠', label: 'Perfiles IA'  },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
