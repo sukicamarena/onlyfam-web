@@ -10,6 +10,11 @@ async function getUsers() {
     supabaseAdmin.from('messages').select('user_id'),
   ]);
 
+  console.log('AUTH ERROR:', authRes.error);
+  console.log('AUTH USERS COUNT:', authRes.data?.users?.length);
+  console.log('PROFILES ERROR:', profilesRes.error);
+  console.log('PROFILES COUNT:', profilesRes.data?.length);
+
   const authUsers = authRes.data?.users ?? [];
   const profiles = profilesRes.data ?? [];
 
@@ -24,7 +29,9 @@ async function getUsers() {
 
   const profileMap = Object.fromEntries(profiles.map(p => [p.id, p]));
 
-  return authUsers.map(u => ({
+  const debugErrors = { authError: authRes.error, profilesError: profilesRes.error };
+
+  return { users: authUsers.map(u => ({
     id: u.id,
     email: u.email ?? '',
     username: profileMap[u.id]?.username ?? '',
@@ -36,7 +43,7 @@ async function getUsers() {
     group_count: groupCounts[u.id] ?? 0,
     post_count: postCounts[u.id] ?? 0,
     message_count: msgCounts[u.id] ?? 0,
-  }));
+  })), debugErrors };
 }
 
 function MetricCard({ label, value, icon, color }: { label: string; value: number; icon: string; color: string }) {
@@ -52,7 +59,7 @@ function MetricCard({ label, value, icon, color }: { label: string; value: numbe
 }
 
 export default async function UsersPage() {
-  const users = await getUsers();
+  const { users, debugErrors } = await getUsers();
 
   const now = Date.now();
   const DAY = 86400000;
@@ -65,6 +72,9 @@ export default async function UsersPage() {
       <div>
         <h1 className="text-2xl font-bold text-[#0d1b2a]">Usuarios</h1>
         <p className="text-sm text-gray-500 mt-0.5">{users.length} usuarios registrados</p>
+        <pre style={{fontSize:10, color:'red'}}>
+          AUTH: {JSON.stringify(debugErrors.authError)} | PROFILES: {JSON.stringify(debugErrors.profilesError)}
+        </pre>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
