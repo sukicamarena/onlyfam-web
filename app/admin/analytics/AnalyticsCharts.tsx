@@ -90,6 +90,21 @@ export function SessionsChart({ data }: { data: { date: string; sessions: number
   );
 }
 
+/* ── Screens visited horizontal bar ── */
+export function ScreensBarChart({ data }: { data: { screen: string; count: number }[] }) {
+  return (
+    <ResponsiveContainer width="100%" height={Math.max(180, data.length * 40)}>
+      <BarChart data={data} layout="vertical" margin={{ top: 5, right: 50, left: 150, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" horizontal={false} />
+        <XAxis type="number" tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
+        <YAxis type="category" dataKey="screen" tick={{ fontSize: 11, fill: '#374151' }} tickLine={false} axisLine={false} width={150} />
+        <Tooltip contentStyle={{ border: 'none', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', fontSize: 12 }} formatter={(v) => [typeof v === 'number' ? v.toLocaleString() : v, 'Eventos']} />
+        <Bar dataKey="count" name="Eventos" fill="#1A6FD4" radius={[0, 4, 4, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
 /* ── Hour×Day heatmap ── */
 export function HeatmapChart({ matrix }: { matrix: number[][] }) {
   const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];

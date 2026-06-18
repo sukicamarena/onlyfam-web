@@ -1,7 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import {
   ActiveUsersTrendChart, PostsBarChart, NewVsReturningChart,
-  EventsBarChart, SessionsChart, HeatmapChart,
+  EventsBarChart, SessionsChart, HeatmapChart, ScreensBarChart,
 } from './AnalyticsCharts';
 
 function daysAgo(n: number) {
@@ -79,6 +79,21 @@ async function getData() {
     matrix[d.getDay()][d.getHours()]++;
   });
 
+  // ── Pantallas más visitadas
+  const SCREEN_EVENTS: Record<string, string> = {
+    home_viewed: 'Home',
+    group_opened: 'Grupo abierto',
+    message_sent: 'Mensaje enviado',
+    post_created: 'Post creado',
+    invite_shared: 'Invitación compartida',
+    challenge_completed: 'Reto completado',
+    login: 'Login',
+    signup: 'Registro',
+  };
+  const screenData = Object.entries(SCREEN_EVENTS)
+    .map(([name, label]) => ({ screen: label, count: eventCounts[name] ?? 0 }))
+    .sort((a, b) => b.count - a.count);
+
   // ── Group health
   const now = Date.now();
   const activeGroups = groups.filter(g => g.last_activity_at && now - new Date(g.last_activity_at).getTime() < 7 * 86400000).length;
@@ -116,7 +131,7 @@ async function getData() {
     });
   }
 
-  return { trendData, contentData, newActive, returningActive, topEvents, sessionsData, matrix, activeGroups, ghostGroups, avgMsgsPerGroup, avgPostsPerGroup, totalEvents, groups: groups.length, cohorts };
+  return { trendData, contentData, newActive, returningActive, topEvents, sessionsData, matrix, activeGroups, ghostGroups, avgMsgsPerGroup, avgPostsPerGroup, totalEvents, groups: groups.length, cohorts, screenData };
 }
 
 function Card({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
@@ -264,6 +279,22 @@ export default async function AnalyticsPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── PANTALLAS MÁS VISITADAS ── */}
+      <section className="space-y-4">
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Pantallas más visitadas</h2>
+
+        <Card title="Actividad por pantalla" subtitle="Eventos registrados — últimos 90 días">
+          {d.screenData.every(s => s.count === 0) ? (
+            <div className="text-center py-8 text-gray-300">
+              <div className="text-3xl mb-1">📱</div>
+              <p className="text-sm">Sin datos de navegación</p>
+            </div>
+          ) : (
+            <ScreensBarChart data={d.screenData} />
+          )}
+        </Card>
       </section>
     </div>
   );

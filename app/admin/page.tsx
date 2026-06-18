@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import UsersChart from './UsersChart';
+import RealTimeUsers from './RealTimeUsers';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -105,6 +106,7 @@ export default async function AdminDashboard() {
 
       {/* Metric cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <RealTimeUsers />
         {CARDS.map(card => (
           <div key={card.key} className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
             <div className="flex items-start justify-between mb-3">

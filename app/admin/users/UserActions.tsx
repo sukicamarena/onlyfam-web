@@ -2,6 +2,56 @@
 
 import { useState } from 'react';
 
+function BanModal({ userId, onClose, onDone }: { userId: string; onClose: () => void; onDone: () => void }) {
+  const [reason, setReason] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const submit = async () => {
+    if (!reason.trim()) { setError('Ingresa un motivo'); return; }
+    setLoading(true);
+    const res = await fetch('/api/admin/moderation/ban', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, reason }),
+    });
+    if (res.ok) { onDone(); onClose(); }
+    else { const j = await res.json(); setError(j.error ?? 'Error'); setLoading(false); }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold text-[#0d1b2a]">Suspender usuario</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl leading-none">×</button>
+        </div>
+        <div>
+          <label className="text-xs font-medium text-gray-600 mb-1.5 block">Motivo del ban</label>
+          <textarea
+            value={reason}
+            onChange={e => setReason(e.target.value)}
+            placeholder="Describe el motivo..."
+            rows={3}
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 resize-none"
+          />
+        </div>
+        {error && <p className="text-xs text-red-500">{error}</p>}
+        <div className="flex gap-2">
+          <button onClick={onClose} className="flex-1 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50">Cancelar</button>
+          <button
+            onClick={submit}
+            disabled={loading}
+            className="flex-1 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
+          >
+            {loading ? 'Suspendiendo...' : 'Suspender'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 type User = {
   id: string;
   email: string;
@@ -25,6 +75,8 @@ function ProfileModal({ user, onClose }: { user: User; onClose: () => void }) {
   const [resetLink, setResetLink] = useState<string | null>(null);
   const [resetting, setResetting] = useState(false);
   const [resetError, setResetError] = useState('');
+  const [showBanModal, setShowBanModal] = useState(false);
+  const [banned, setBanned] = useState(false);
 
   const handleReset = async () => {
     setResetting(true);
@@ -41,6 +93,10 @@ function ProfileModal({ user, onClose }: { user: User; onClose: () => void }) {
   };
 
   return (
+    <>
+      {showBanModal && (
+        <BanModal userId={user.id} onClose={() => setShowBanModal(false)} onDone={() => setBanned(true)} />
+      )}
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4" onClick={e => e.stopPropagation()}>
         <div className="flex items-center gap-3">
@@ -97,9 +153,34 @@ function ProfileModal({ user, onClose }: { user: User; onClose: () => void }) {
             </button>
           )}
           {resetError && <p className="text-xs text-red-500">{resetError}</p>}
+          {banned ? (
+            <p className="text-xs text-red-500 font-medium text-center pt-1">Usuario suspendido</p>
+          ) : (
+            <button
+              onClick={() => setShowBanModal(true)}
+              className="w-full py-2 bg-red-50 text-red-600 border border-red-200 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors"
+            >
+              🚫 Suspender usuario
+            </button>
+          )}
         </div>
       </div>
     </div>
+    </>
+  );
+}
+
+function RowBanButton({ userId }: { userId: string }) {
+  const [open, setOpen] = useState(false);
+  const [banned, setBanned] = useState(false);
+  if (banned) return <span className="text-xs text-red-400">Suspendido</span>;
+  return (
+    <>
+      {open && <BanModal userId={userId} onClose={() => setOpen(false)} onDone={() => setBanned(true)} />}
+      <button onClick={() => setOpen(true)} className="text-xs text-red-500 hover:underline font-medium ml-3">
+        Suspender
+      </button>
+    </>
   );
 }
 
@@ -200,11 +281,12 @@ export default function UsersTable({ users }: { users: User[] }) {
                 <td className="px-4 py-3 hidden lg:table-cell">
                   <span className="bg-[#EBF3FF] text-[#1A6FD4] text-xs font-medium px-2 py-0.5 rounded-full">{u.group_count}</span>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 whitespace-nowrap">
                   <button
                     onClick={() => setSelected(u)}
                     className="text-xs text-[#1A6FD4] hover:underline font-medium"
                   >Ver perfil</button>
+                  <RowBanButton userId={u.id} />
                 </td>
               </tr>
             ))}
