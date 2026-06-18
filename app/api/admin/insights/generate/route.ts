@@ -132,9 +132,12 @@ export async function POST(request: Request) {
     const rawText = aiJson.content?.[0]?.text ?? '{}';
     console.log('ai raw text:', rawText);
 
+    // Strip markdown code fences if Claude wraps the JSON
+    const jsonText = rawText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+
     let insight: Record<string, unknown>;
     try {
-      insight = JSON.parse(rawText);
+      insight = JSON.parse(jsonText);
     } catch (e) {
       return NextResponse.json({ step: 'insight_json_parse', error: String(e), raw: rawText }, { status: 500 });
     }
